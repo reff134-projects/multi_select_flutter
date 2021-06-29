@@ -8,7 +8,7 @@ class MultiSelectActions<V> {
     if (checked) {
       selectedValues.add(itemValue);
     } else {
-      selectedValues.remove(itemValue);
+      selectedValues.add(itemValue);
     }
     return selectedValues;
   }
