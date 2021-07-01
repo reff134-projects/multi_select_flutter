@@ -3,6 +3,8 @@ import '../util/multi_select_actions.dart';
 import '../util/multi_select_item.dart';
 import '../util/multi_select_list_type.dart';
 
+import 'package:queries/collections.dart';
+
 /// A dialog containing either a classic checkbox style list, or a chip style list.
 class MultiSelectDialog<V> extends StatefulWidget with MultiSelectActions<V> {
   /// List of items to select from.
@@ -137,8 +139,28 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
         controlAffinity: ListTileControlAffinity.leading,
         onChanged: (checked) {
           setState(() {
-            _selectedValues = widget.onItemCheckedChange(
-                _selectedValues, item.value, checked!);
+            var removedItems = [];
+            var addedItems = [];
+            var tempSelectedValues = _selectedValues = widget
+                .onItemCheckedChange(_selectedValues, item.value, checked!);
+            _selectedValues.forEach((element) {
+              var isFound = tempSelectedValues.any((v) => v == element);
+              if (!isFound) {
+                removedItems.add(element);
+              }
+            });
+            tempSelectedValues.forEach((element) {
+              var isFound = _selectedValues.any((v) => v == element);
+              if (!isFound) {
+                addedItems.add(element);
+              }
+            });
+            removedItems.forEach((element) {
+              _selectedValues.remove(element);
+            });
+            addedItems.forEach((element) {
+              _selectedValues.add(element);
+            });
           });
           if (widget.onSelectionChanged != null) {
             widget.onSelectionChanged!(_selectedValues);
