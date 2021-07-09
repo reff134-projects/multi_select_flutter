@@ -140,13 +140,13 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
         controlAffinity: ListTileControlAffinity.leading,
         onChanged: (checked) {
           setState(() {
-            var removedItems = [];
-            var addedItems = [];
+            _selectedValues = [];
+            _removedValues = [];
 
             if (checked!) {
-              addedItems.add(item.value);
+              _selectedValues.add(item.value);
             } else {
-              removedItems.add(item.value);
+              _removedValues.add(item.value);
             }
 
             /*var tempSelectedValues = _selectedValues;
