@@ -143,7 +143,13 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
             var removedItems = [];
             var addedItems = [];
 
-            var tempSelectedValues = _selectedValues;
+            if (checked!) {
+              addedItems.add(item.value);
+            } else {
+              removedItems.add(item.value);
+            }
+
+            /*var tempSelectedValues = _selectedValues;
             _selectedValues = widget.onItemCheckedChange(
                 _selectedValues, item.value, checked!);
 
@@ -169,7 +175,7 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
             });
             addedItems.forEach((element) {
               _selectedValues.add(element);
-            });
+            });*/
           });
           if (widget.onSelectionChanged != null) {
             widget.onSelectionChanged!(_selectedValues, _removedValues);
