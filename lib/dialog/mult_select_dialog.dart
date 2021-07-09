@@ -141,8 +141,10 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
           setState(() {
             var removedItems = [];
             var addedItems = [];
-            var tempSelectedValues = _selectedValues = widget
-                .onItemCheckedChange(_selectedValues, item.value, checked!);
+            var tempSelectedValues = _selectedValues;
+            _selectedValues = widget.onItemCheckedChange(
+                _selectedValues, item.value, checked!);
+
             _selectedValues.forEach((element) {
               var isFound = tempSelectedValues.any((v) => v == element);
               if (!isFound) {
