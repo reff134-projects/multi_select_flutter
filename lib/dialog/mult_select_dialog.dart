@@ -17,7 +17,7 @@ class MultiSelectDialog<V> extends StatefulWidget with MultiSelectActions<V> {
   final Widget? title;
 
   /// Fires when the an item is selected / unselected.
-  final void Function(List<V>)? onSelectionChanged;
+  final void Function(List<V>, List<V>)? onSelectionChanged;
 
   /// Fires when confirm is tapped.
   final void Function(List<V>)? onConfirm;
@@ -105,6 +105,7 @@ class MultiSelectDialog<V> extends StatefulWidget with MultiSelectActions<V> {
 
 class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
   List<V> _selectedValues = [];
+  List<V> _removedValues = [];
   bool _showSearch = false;
   List<MultiSelectItem<V>> _items;
 
@@ -141,9 +142,14 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
           setState(() {
             var removedItems = [];
             var addedItems = [];
+
             var tempSelectedValues = _selectedValues;
             _selectedValues = widget.onItemCheckedChange(
                 _selectedValues, item.value, checked!);
+
+            if (!checked) {
+              _removedValues.add(item.value);
+            }
 
             _selectedValues.forEach((element) {
               var isFound = tempSelectedValues.any((v) => v == element);
@@ -154,9 +160,10 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
             tempSelectedValues.forEach((element) {
               var isFound = _selectedValues.any((v) => v == element);
               if (!isFound) {
-                addedItems.add(element);
+                removedItems.add(element);
               }
             });
+
             removedItems.forEach((element) {
               _selectedValues.remove(element);
             });
@@ -165,7 +172,7 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
             });
           });
           if (widget.onSelectionChanged != null) {
-            widget.onSelectionChanged!(_selectedValues);
+            widget.onSelectionChanged!(_selectedValues, _removedValues);
           }
         },
       ),
@@ -215,7 +222,7 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
                 _selectedValues, item.value, checked);
           });
           if (widget.onSelectionChanged != null) {
-            widget.onSelectionChanged!(_selectedValues);
+            widget.onSelectionChanged!(_selectedValues, []);
           }
         },
       ),

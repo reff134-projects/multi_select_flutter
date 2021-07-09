@@ -27,7 +27,7 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
   final List<MultiSelectItem<V>> items;
 
   /// Fires when the an item is selected / unselected.
-  final void Function(List<V>)? onSelectionChanged;
+  final void Function(List<V>, List<V>)? onSelectionChanged;
 
   /// Overrides the default MultiSelectChipDisplay attached to this field.
   /// If you want to remove it, use MultiSelectChipDisplay.none().
@@ -166,7 +166,8 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
                 selectedItemsTextStyle: selectedItemsTextStyle,
                 checkColor: checkColor,
               );
-              return _MultiSelectDialogFieldView<V?>._withState(field as _MultiSelectDialogFieldView<V?>, state);
+              return _MultiSelectDialogFieldView<V?>._withState(
+                  field as _MultiSelectDialogFieldView<V?>, state);
             });
 }
 
@@ -178,7 +179,7 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
   final Icon? buttonIcon;
   final Widget? title;
   final List<MultiSelectItem<V>> items;
-  final void Function(List<V>)? onSelectionChanged;
+  final void Function(List<V>, List<V>)? onSelectionChanged;
   final MultiSelectChipDisplay<V>? chipDisplay;
   final List<V>? initialValue;
   final void Function(List<V>)? onConfirm;
@@ -282,8 +283,8 @@ class __MultiSelectDialogFieldViewState<V>
   Widget _buildInheritedChipDisplay() {
     List<MultiSelectItem<V>?> chipDisplayItems = [];
     chipDisplayItems = _selectedItems
-        .map((e) => widget.items
-            .firstWhereOrNull((element) => e == element.value))
+        .map((e) =>
+            widget.items.firstWhereOrNull((element) => e == element.value))
         .toList();
     chipDisplayItems.removeWhere((element) => element == null);
     if (widget.chipDisplay != null) {
